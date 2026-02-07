@@ -6,7 +6,7 @@ import os
 # Page config
 st.set_page_config(page_title="F1 Telemetry Dashboard", layout="wide")
 
-st.title("🏎️ F1 Vehicle Dynamics Analysis")
+st.title(" F1 Vehicle Dynamics Analysis")
 st.markdown("*Engineering analysis of Formula 1 telemetry data*")
 st.markdown("**A project by M King**")
 
@@ -28,7 +28,7 @@ SESSION = st.sidebar.selectbox("Session Type",
                            'FP2': 'Practice 2', 'FP3': 'Practice 3'}[x]
 )
 
-analyze_button = st.sidebar.button("🏁 Analyze", type="primary")
+analyze_button = st.sidebar.button(" Analyze", type="primary")
 
 if analyze_button:
     with st.spinner("Loading race data... this may take a minute"):
@@ -64,7 +64,7 @@ if analyze_button:
             max_throttle = telemetry['Throttle'].max()
             
             # Display results
-            st.success(f"✅ Data loaded successfully!")
+            st.success(f" Data loaded successfully!")
             
             # Header with key info
             col1, col2, col3 = st.columns(3)
