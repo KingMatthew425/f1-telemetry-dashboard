@@ -64,12 +64,12 @@ if analyze_button:
             max_throttle = telemetry['Throttle'].max()
             
             # Display results
-            st.success(f" Data loaded successfully!")
+            st.success(f" Data loaded ")
             
             # Header with key info
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Driver", driver)
+                st.metric("Winning Driver", driver)
             with col2:
                 st.metric("Fastest Lap", str(lap_time).split()[-1])
             with col3:
@@ -144,9 +144,9 @@ if analyze_button:
             st.info("Try a different race or session. Some combinations may not have data available.")
 
 else:
-    st.info("👈 Select a race and click 'Analyze' to get started")
+    st.info(" Select a race and click 'Analyze' to get started")
     st.markdown("""
-    ### About This Dashboard
+    ### 
     This tool analyzes Formula 1 telemetry data including:
     - **Speed profiles** around the circuit
     - **Driver inputs** (throttle, brake, gear changes)
