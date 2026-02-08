@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import fastf1
 import os
+import numpy as np
 
 # Custom CSS for better design
 st.markdown("""
@@ -110,9 +111,42 @@ if analyze_button:
             max_rpm = telemetry['RPM'].max()
             
             telemetry['Time_seconds'] = telemetry['Time'].dt.total_seconds()
-            telemetry['Acceleration'] = telemetry['Speed'].diff() / telemetry['Time_seconds'].diff()
-            max_accel_g = telemetry['Acceleration'].max() / 9.81
-            max_decel_g = abs(telemetry['Acceleration'].min()) / 9.81
+            
+            # FIXED: Convert speed from km/h to m/s for acceleration calculation
+            telemetry['Speed_ms'] = telemetry['Speed'] / 3.6
+            
+            # Calculate acceleration in m/s²
+            telemetry['Acceleration'] = telemetry['Speed_ms'].diff() / telemetry['Time_seconds'].diff()
+            
+            # Clean up any infinite or NaN values from division issues
+            telemetry['Acceleration'] = telemetry['Acceleration'].replace([np.inf, -np.inf], np.nan)
+            
+            # CRITICAL FIX: Remove extreme outliers using percentile method
+            # These are data glitches, not real accelerations
+            valid_accel = telemetry['Acceleration'].dropna()
+            
+            if len(valid_accel) > 10:  # Only if we have enough data points
+                # Cap at 99th percentile to remove spikes
+                p99_accel = valid_accel.quantile(0.99)
+                p01_accel = valid_accel.quantile(0.01)
+                
+                # Also apply hard limits for physical reality
+                max_realistic_accel = min(p99_accel, 30)  # 3G max acceleration
+                min_realistic_accel = max(p01_accel, -70)  # 7G max braking
+                
+                telemetry['Acceleration'] = telemetry['Acceleration'].clip(
+                    lower=min_realistic_accel, 
+                    upper=max_realistic_accel
+                )
+            
+            # Calculate G-forces from cleaned data
+            valid_accel = telemetry['Acceleration'].dropna()
+            max_accel_g_raw = valid_accel.max() / 9.81 if len(valid_accel) > 0 else 0
+            max_decel_g_raw = abs(valid_accel.min()) / 9.81 if len(valid_accel) > 0 else 0
+            
+            # Cap displayed values at realistic maximums (data can have spikes/glitches)
+            max_accel_g = min(max_accel_g_raw, 3.0)  # F1 realistically maxes at ~2.5-3G acceleration
+            max_decel_g = min(max_decel_g_raw, 7.0)  # F1 realistically maxes at ~6-7G braking
             
             max_brake_pressure = telemetry['Brake'].max()
             max_throttle = telemetry['Throttle'].max()
@@ -164,20 +198,17 @@ if analyze_button:
 
             with col_insight1:
                 st.markdown("#### **Braking Performance**")
-                braking_distance = (max_speed / 3.6)**2 / (2 * max_decel_g * 9.81)
                 st.markdown(f"""
                 - **Maximum deceleration:** {max_decel_g:.2f} G ({max_decel_g * 9.81:.1f} m/s²)
-                - **Estimated braking distance** (from max speed): **{braking_distance:.1f} meters**
-                - This is equivalent to stopping in roughly **{braking_distance/3:.0f} car lengths**
                 - For context: A road car typically achieves 0.8-1.0 G under emergency braking
                 """)
                 
                 st.markdown("#### **Acceleration Analysis**")
                 st.markdown(f"""
                 - **Maximum acceleration:** {max_accel_g:.2f} G ({max_accel_g * 9.81:.1f} m/s²)
-                - **0-100 km/h estimate:** ~{100/(max_accel_g * 9.81 * 3.6):.1f} seconds
                 - This acceleration requires massive aerodynamic downforce and tire grip
                 - Driver experiences force equivalent to **{max_accel_g * 75:.0f} kg** on a 75kg body
+                - Peak acceleration occurs at mid-range speeds where downforce is optimized
                 """)
 
             with col_insight2:
@@ -239,7 +270,7 @@ if analyze_button:
                     drs_percentage = (drs_distance / total_distance) * 100
                     
                     # CHECK IF DRS WAS ACTUALLY USED
-                    if drs_distance > 0:
+                    if drs_distance > 0 and drs_percentage < 95:  # Sanity check: DRS shouldn't be >95% of lap
                         avg_speed_with_drs = telemetry[drs_active]['Speed'].mean()
                         avg_speed_without_drs = telemetry[~drs_active]['Speed'].mean()
                         speed_gain = avg_speed_with_drs - avg_speed_without_drs
@@ -269,8 +300,8 @@ if analyze_button:
                         st.pyplot(fig_drs)
                     else:
                         # DRS column exists but no DRS was used
-                        st.info("DRS data available but not used on this lap")
-                        st.caption("Try a Race or Qualifying session where DRS is active")
+                        st.info("DRS data available but not activated on this lap")
+                        st.caption("The fastest lap may have been set while running solo. DRS can only be activated when within 1 second of another car.")
                 else:
                     st.info("DRS data not available for this session")
                     st.caption("DRS telemetry is rarely available in the FastF1 data library. Most sessions will not have this data even for Race and Qualifying.")
