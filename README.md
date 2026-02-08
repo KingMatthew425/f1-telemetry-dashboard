@@ -1,6 +1,6 @@
 # F1 Telemetry Dashboard
 
-**A project by M King**
+**A project by Matthew King**
 
 An interactive web application for analyzing Formula 1 telemetry data, built with Streamlit and FastF1. This dashboard provides comprehensive insights into vehicle dynamics, driver performance, and lap-by-lap comparisons.
 
@@ -148,7 +148,7 @@ This project is for educational and analytical purposes. All F1 data is property
 
 ## Contact
 
-**M King**
+**Matthew King**
 
 For questions, suggestions, or collaboration opportunities, please reach out via kingm425@protonmail.com
 
