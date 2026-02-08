@@ -53,7 +53,7 @@ st.set_page_config(page_title="F1 Telemetry Dashboard", layout="wide")
 
 st.title("F1 Vehicle Dynamics Analysis")
 st.markdown("*Engineering analysis of Formula 1 telemetry data*")
-st.markdown("**A project by M King**")
+st.markdown("**A project by Matthew King**")
 
 # Sidebar controls
 st.sidebar.header("Race Selection")
