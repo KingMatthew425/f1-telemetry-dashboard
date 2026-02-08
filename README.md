@@ -29,13 +29,13 @@ An interactive web application for analyzing Formula 1 telemetry data, built wit
 ## Demo
 
 ### Dashboard Overview
-<video src="https://github.com/KingMatthew425/f1-telemetry-dashboard/raw/main/Dashboard.mp4" autoplay loop muted playsinline width="100%"></video>
+![Dashboard Overview](Dashboard.gif)
 
 ### Track Map Visualization
-<video src="https://github.com/KingMatthew425/f1-telemetry-dashboard/raw/main/Data.mp4" autoplay loop muted playsinline width="100%"></video>
+![Track Map Visualization](Data.gif)
 
 ### Lap Comparison
-<video src="https://github.com/KingMatthew425/f1-telemetry-dashboard/raw/main/Comparison.mp4" autoplay loop muted playsinline width="100%"></video>
+![Lap Comparison](Comparison.gif)
 
 ## Installation
 
