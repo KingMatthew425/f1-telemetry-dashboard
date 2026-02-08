@@ -47,7 +47,7 @@ An interactive web application for analyzing Formula 1 telemetry data, built wit
 
 1. Clone this repository:
 ```bash
-git clone <https://github.com/KingMatthew425/f1-telemetry-dashboard>
+git clone https://github.com/KingMatthew425/f1-telemetry-dashboard
 cd f1-telemetry-dashboard
 ```
 
