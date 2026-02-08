@@ -29,17 +29,13 @@ An interactive web application for analyzing Formula 1 telemetry data, built wit
 ## Demo
 
 ### Dashboard Overview
-<!-- Add your GIF here -->
-![Dashboard Overview](Dashboard.mp4)
+<video src="Dashboard.mp4" autoplay loop muted playsinline width="100%"></video>
 
 ### Track Map Visualization
-<!-- Add your GIF here -->
-![Track Map Visualization](Data.mp4)
+<video src="Data.mp4" autoplay loop muted playsinline width="100%"></video>
 
 ### Lap Comparison
-<!-- Add your GIF here -->
-![Lap Comparison](Comparison.mp4)
-
+<video src="Comparison.mp4" autoplay loop muted playsinline width="100%"></video>
 ## Installation
 
 ### Prerequisites
